@@ -1,38 +1,178 @@
+@import url("https://fonts.googleapis.com/css2?family=Lato:wght@100;300;400;600&display=swap");
+
+:root {
+  --pastel-off-white: #f4f6fc;
+  --pastel-blue: rgb(188, 200, 241);
+  --pastel-yellow: rgb(255, 236, 166);
+  --pastel-red: rgb(252, 172, 171);
+  --pastel-green: rgb(88, 216, 147);
+  --pastel-purple: rgb(152, 129, 238);
+  --pastel-black: rgb(19, 19, 32);
+}
+
+body {
+  margin: 0;
+  font-family: "Lato", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: var(--pastel-off-white) !important;
+}
+
 .App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
   display: flex;
   flex-direction: column;
+  width: 100vw;
+}
+
+.App > .navbar {
+  padding: 2rem 11rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
+}
+
+.App > .navbar > .header {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.App > .app-body {
+  flex-grow: 1;
+}
+
+.connect-web3 {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.connect-web3 > .account-info {
+  font-weight: 300;
+}
+
+.connect-web3 > .connect-button {
+  background: var(--pastel-black);
+  padding: 0.8rem 1.5rem;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: white;
+  font-size: 0.8rem;
+  border-radius: 1rem;
+  cursor: pointer;
+}
+
+.App > .tabs {
+  padding: 1rem 11rem 0 11rem;
+  display: flex;
+  gap: 1rem;
+  cursor: pointer;
+}
+
+.App > .tabs > .protocol {
+  padding: 0.5rem 1rem;
+  border-radius: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.App > .tabs > .protocol > .icon {
+  height: 2rem;
+  width: 2rem;
+  border-radius: 50%;
+  background: var(--pastel-yellow);
+}
+
+.App > .tabs > .active {
+  font-weight: 600;
+  background: var(--pastel-blue);
+}
+
+.App > .app-body {
+  /* background: white; */
+  /* border-radius: 2rem; */
+  padding: 2rem;
+  margin: 0rem 9rem 1rem 9rem;
+}
+
+.App > .app-body > .futures {
+  border-radius: 2rem;
+  padding: 2rem;
+  background: white;
+  border-radius: 2rem;
+  margin-bottom: 2rem;
+}
+
+.App > .app-body > .futures > .interactions {
+  display: flex;
+  justify-content: space-between;
+}
+
+.App > .app-body > .futures > .interactions > .token {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 15rem;
+}
+
+.App > .app-body > .futures > .interactions > .token > .token-image {
+  height: 3.5rem;
+  width: 3.5rem;
+  border-radius: 50%;
+  background: var(--pastel-purple);
+}
+
+.App > .app-body > .futures > .interactions > .token > .token-name {
+  font-size: 1.6rem;
+}
+
+.App > .app-body > .futures > .interactions > .buttons {
+  display: flex;
+  gap: 2rem;
+  height: 100%;
+}
+
+.App > .app-body > .futures > .interactions > .buttons > .button {
+  color: white;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  font-size: 0.8rem;
+  width: 7rem;
+  display: flex;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  text-transform: uppercase;
+  font-weight: 400;
 }
 
-.App-link {
-  color: #61dafb;
+.App > .app-body > .futures > .interactions > .buttons > .sub {
+  background: var(--pastel-black);
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.App > .app-body > .futures > .interactions > .buttons > .unsub {
+  background: var(--pastel-black);
+}
+
+.App > .app-body > .futures > .stats {
+  padding: 2rem 0 0 0;
+  width: 70%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.App > .app-body > .futures > .stats > .stat > .title {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+.App > .app-body > .futures > .stats > .stat > .value {
+  font-size: 1.2rem;
+  font-weight: 300;
+}
+
+.right-align {
+  text-align: right;
 }
