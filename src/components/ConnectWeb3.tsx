@@ -1,19 +1,47 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Web3Modal from "web3modal";
 import Web3 from "web3";
 import { useStoreActions, useStoreState } from "../store/globalStore";
 import makeBlockie from "ethereum-blockies-base64";
+import Authereum from "authereum";
+import WalletConnectProvider from "@walletconnect/web3-provider";
 
-export interface ConnectWeb3Props {}
-
-const ConnectWeb3: React.FunctionComponent<ConnectWeb3Props> = () => {
+const ConnectWeb3: React.FunctionComponent = () => {
   const { setAccount, setNetwork, setWeb3, setConnected } = useStoreActions(
     (actions) => actions
   );
 
   const { web3, connected, account, network } = useStoreState((state) => state);
 
-  let providerOptions = {};
+  let providerOptions = {
+    metamask: {
+      id: "injected",
+      name: "MetaMask",
+      type: "injected",
+      check: "isMetaMask",
+      package: null,
+    },
+    authereum: {
+      package: Authereum,
+    },
+    walletconnect: {
+      package: WalletConnectProvider,
+      options: {
+        infuraId: "INFURA_ID",
+        network: "rinkeby",
+        qrcodeModalOptions: {
+          mobileLinks: [
+            "rainbow",
+            "metamask",
+            "argent",
+            "trust",
+            "imtoken",
+            "pillar",
+          ],
+        },
+      },
+    },
+  };
 
   const web3Modal = new Web3Modal({
     cacheProvider: true,
@@ -39,7 +67,11 @@ const ConnectWeb3: React.FunctionComponent<ConnectWeb3Props> = () => {
     provider.on("accountsChanged", async (accounts: string[]) => {
       await setAccount(accounts[0]);
     });
-    provider.on("networkChanged", async (network: any) => {});
+    provider.on("networkChanged", async (x: any) => {
+      const web3: any = new Web3(provider);
+      const network = await web3.eth.net.getNetworkType();
+      await setNetwork(network);
+    });
   };
 
   const onConnect = async () => {
@@ -57,12 +89,26 @@ const ConnectWeb3: React.FunctionComponent<ConnectWeb3Props> = () => {
     await setConnected(true);
   };
 
+  useEffect(() => {
+    onConnect();
+    //eslint-disable-next-line
+  }, []);
+
   return (
     <div className="connect-web3">
       <div className="account-info">
-        {network && "(" + network + ")"} {account}{" "}
+        {network && "(" + network + ")"} {account.slice(0, 6)}
+        {account && "......"}
+        {account.slice(38, 42)}
       </div>
-      {/* <div>{account && <img src={makeBlockie(account)} height="30px" />}</div> */}
+      {account && (
+        <img
+          src={makeBlockie(account)}
+          height="35rem"
+          className="account-blockie"
+          alt="blockie"
+        />
+      )}
       <div
         className="connect-button"
         onClick={connected ? resetApp : onConnect}

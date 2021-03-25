@@ -4,8 +4,10 @@ import globalStore, { IGlobalStore } from "./store/globalStore";
 import { createStore, StoreProvider } from "easy-peasy";
 
 import ConnectWeb3 from "./components/ConnectWeb3";
-import Future from "./components/Future";
-import Tabs from "./components/Tabs";
+import ProtocolTabs from "./components/ProtocolTabs";
+import Sidebar from "./components/Sidebar";
+import TokensTab from "./components/TokensTab";
+import FutureContainer from "./components/FuturesContainer";
 
 const store = createStore<IGlobalStore>(globalStore);
 
@@ -13,16 +15,16 @@ function App() {
   return (
     <StoreProvider store={store}>
       <div className="App">
-        <div className="navbar">
-          <div className="header">Unreal.Finance</div>
-          <ConnectWeb3 />
-        </div>
+        <Sidebar />
 
-        <Tabs />
+        <div className="main-content">
+          <div className="navbar">
+            <ProtocolTabs />
+            <ConnectWeb3 />
+          </div>
 
-        <div className="app-body">
-          <Future />
-          <Future />
+          <TokensTab />
+          <FutureContainer />
         </div>
       </div>
     </StoreProvider>

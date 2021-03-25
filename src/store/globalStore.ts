@@ -6,6 +6,8 @@ export interface IGlobalStore {
   network: string;
   connected: boolean;
   shouldUpdate: boolean;
+  currentProtocol: "AAVE" | "COMP";
+  currentToken: "DAI" | "USDT" | "USDC";
 
   // actions
   setWeb3: Action<IGlobalStore, any>;
@@ -13,6 +15,8 @@ export interface IGlobalStore {
   setNetwork: Action<IGlobalStore, string>;
   setConnected: Action<IGlobalStore, boolean>;
   setShouldUpdate: Action<IGlobalStore, boolean>;
+  setCurrentProtocol: Action<IGlobalStore, string>;
+  setCurrentToken: Action<IGlobalStore, string>;
 }
 
 const globalStore: IGlobalStore = {
@@ -21,6 +25,8 @@ const globalStore: IGlobalStore = {
   network: "",
   connected: false,
   shouldUpdate: false,
+  currentProtocol: "AAVE",
+  currentToken: "DAI",
 
   // actions
   setWeb3: action((state, payload: any) => {
@@ -41,6 +47,14 @@ const globalStore: IGlobalStore = {
 
   setShouldUpdate: action((state, payload: boolean) => {
     state.shouldUpdate = payload;
+  }),
+
+  setCurrentProtocol: action((state, payload: "AAVE" | "COMP") => {
+    state.currentProtocol = payload;
+  }),
+
+  setCurrentToken: action((state, payload: "DAI" | "USDT" | "USDC") => {
+    state.currentToken = payload;
   }),
 };
 

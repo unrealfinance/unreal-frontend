@@ -20,11 +20,73 @@ body {
 
 .App {
   display: flex;
-  flex-direction: column;
   width: 100vw;
+  height: 100vh;
 }
 
-.App > .navbar {
+.App > .sidebar {
+  background: var(--pastel-purple);
+  width: 15rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.App > .sidebar > .title {
+  font-weight: 600;
+  text-align: center;
+  padding: 2rem 0;
+  font-size: 1.5rem;
+  color: white;
+}
+
+.App > .sidebar > .links {
+  padding: 2rem;
+}
+
+.App > .sidebar > .links > .socials {
+  display: flex;
+  padding: 2rem 0 1rem 0;
+  gap: 1rem;
+}
+
+.App > .sidebar > .links > .socials > .social {
+  height: 2rem;
+  width: 2rem;
+  border-radius: 50%;
+  background: var(--pastel-yellow);
+}
+
+.App > .sidebar > .links > .link {
+  padding: 0.3rem 0;
+  font-weight: 600;
+  color: white;
+}
+
+.App > .main-content {
+  flex-grow: 1;
+  overflow-y: scroll;
+}
+
+.App > .main-content > .tokens-tab {
+  display: flex;
+  padding: 3rem 11rem 0 12rem;
+  gap: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.App > .main-content > .tokens-tab > .title {
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.App > .main-content > .tokens-tab > .token {
+  width: 12rem !important;
+}
+
+.App > .main-content > .navbar {
   padding: 2rem 11rem;
   display: flex;
   justify-content: space-between;
@@ -32,23 +94,27 @@ body {
   gap: 2rem;
 }
 
-.App > .navbar > .header {
+.App > .main-content > .navbar > .header {
   font-size: 1.5rem;
   font-weight: 600;
 }
 
-.App > .app-body {
+.App > .main-content > .futures-container {
   flex-grow: 1;
 }
 
 .connect-web3 {
   display: flex;
   align-items: center;
-  gap: 2rem;
+  gap: 1rem;
 }
 
 .connect-web3 > .account-info {
   font-weight: 300;
+}
+
+.account-blockie {
+  border-radius: 0.5rem;
 }
 
 .connect-web3 > .connect-button {
@@ -62,14 +128,13 @@ body {
   cursor: pointer;
 }
 
-.App > .tabs {
-  padding: 1rem 11rem 0 11rem;
+.App > .main-content > .navbar > .tabs {
   display: flex;
   gap: 1rem;
   cursor: pointer;
 }
 
-.App > .tabs > .protocol {
+.App > .main-content > .navbar > .tabs > .protocol {
   padding: 0.5rem 1rem;
   border-radius: 1rem;
   text-transform: uppercase;
@@ -80,26 +145,26 @@ body {
   gap: 0.5rem;
 }
 
-.App > .tabs > .protocol > .icon {
+.App > .main-content > .navbar > .tabs > .protocol > .icon {
   height: 2rem;
   width: 2rem;
   border-radius: 50%;
   background: var(--pastel-yellow);
 }
 
-.App > .tabs > .active {
+.App > .main-content > .navbar > .tabs > .active {
   font-weight: 600;
   background: var(--pastel-blue);
 }
 
-.App > .app-body {
+.App > .main-content > .futures-container {
   /* background: white; */
   /* border-radius: 2rem; */
   padding: 2rem;
   margin: 0rem 9rem 1rem 9rem;
 }
 
-.App > .app-body > .futures {
+.App > .main-content > .futures-container > .futures {
   border-radius: 2rem;
   padding: 2rem;
   background: white;
@@ -107,36 +172,59 @@ body {
   margin-bottom: 2rem;
 }
 
-.App > .app-body > .futures > .interactions {
+.App > .main-content > .futures-container > .futures > .interactions {
   display: flex;
   justify-content: space-between;
 }
 
-.App > .app-body > .futures > .interactions > .token {
+.App > .main-content > .futures-container > .futures > .interactions > .token {
   display: flex;
   align-items: center;
   justify-content: space-between;
   width: 15rem;
 }
 
-.App > .app-body > .futures > .interactions > .token > .token-image {
+.App
+  > .main-content
+  > .futures-container
+  > .futures
+  > .interactions
+  > .token
+  > .token-image {
   height: 3.5rem;
   width: 3.5rem;
   border-radius: 50%;
   background: var(--pastel-purple);
 }
 
-.App > .app-body > .futures > .interactions > .token > .token-name {
+.App
+  > .main-content
+  > .futures-container
+  > .futures
+  > .interactions
+  > .token
+  > .token-name {
   font-size: 1.6rem;
 }
 
-.App > .app-body > .futures > .interactions > .buttons {
+.App
+  > .main-content
+  > .futures-container
+  > .futures
+  > .interactions
+  > .buttons {
   display: flex;
   gap: 2rem;
   height: 100%;
 }
 
-.App > .app-body > .futures > .interactions > .buttons > .button {
+.App
+  > .main-content
+  > .futures-container
+  > .futures
+  > .interactions
+  > .buttons
+  > .button {
   color: white;
   padding: 0.5rem;
   border-radius: 0.5rem;
@@ -149,26 +237,38 @@ body {
   font-weight: 400;
 }
 
-.App > .app-body > .futures > .interactions > .buttons > .sub {
+.App
+  > .main-content
+  > .futures-container
+  > .futures
+  > .interactions
+  > .buttons
+  > .sub {
   background: var(--pastel-black);
 }
 
-.App > .app-body > .futures > .interactions > .buttons > .unsub {
+.App
+  > .main-content
+  > .futures-container
+  > .futures
+  > .interactions
+  > .buttons
+  > .unsub {
   background: var(--pastel-black);
 }
 
-.App > .app-body > .futures > .stats {
+.App > .main-content > .futures-container > .futures > .stats {
   padding: 2rem 0 0 0;
   width: 70%;
   display: flex;
   justify-content: space-between;
 }
 
-.App > .app-body > .futures > .stats > .stat > .title {
+.App > .main-content > .futures-container > .futures > .stats > .stat > .title {
   font-weight: 600;
   margin-bottom: 0.5rem;
 }
-.App > .app-body > .futures > .stats > .stat > .value {
+.App > .main-content > .futures-container > .futures > .stats > .stat > .value {
   font-size: 1.2rem;
   font-weight: 300;
 }
