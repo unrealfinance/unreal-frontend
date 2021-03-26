@@ -12,6 +12,35 @@ export interface TokensTabProps {}
 const TokensTab: React.FunctionComponent<TokensTabProps> = () => {
   const { setCurrentToken } = useStoreActions((action) => action);
 
+  const customStyles = {
+    control: (base: any, state: any) => ({
+      ...base,
+      padding: "0.3rem 0.8rem",
+      width: "14rem",
+      background: "#2e3449",
+      borderRadius: 6,
+      borderColor: state.isFocused ? null : null,
+      boxShadow: state.isFocused ? null : null,
+    }),
+    option: (base: any, state: any) => ({
+      ...base,
+      color: "#f4f6fc",
+      padding: "1rem",
+      background: state.isSelected ? "#9194a3" : null,
+      "&:hover": {
+        background: "#9194a3",
+      },
+    }),
+    menuList: (base: any) => ({
+      ...base,
+      background: "#2e3449",
+    }),
+    singleValue: (base: any) => ({
+      ...base,
+      color: "#f4f6fc",
+    }),
+  };
+
   const options = [
     {
       value: "DAI",
@@ -45,10 +74,10 @@ const TokensTab: React.FunctionComponent<TokensTabProps> = () => {
     <div className="tokens-tab">
       <div className="title">Available futures :</div>
       <Select
-        className="token"
         options={options}
         placeholder="select token"
         defaultValue={options[0]}
+        styles={customStyles}
         onChange={(e: any) => setCurrentToken(e.value)}
         isSearchable={false}
       />

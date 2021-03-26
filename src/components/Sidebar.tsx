@@ -11,7 +11,7 @@ const Sidebar: React.FunctionComponent<SidebarProps> = () => {
   return (
     <div className="sidebar">
       <div className="title">
-        <img alt="token" src="/assets/unreal-logo.png" width="180" />
+        <img alt="token" src="/assets/unreal-logo.png" width="150" />
       </div>
       <div className="links">
         <div className="link">Governance</div>
@@ -37,6 +37,13 @@ const Sidebar: React.FunctionComponent<SidebarProps> = () => {
             className="social"
             style={{
               backgroundImage: `url(/assets/medium.png)`,
+              backgroundSize: "cover",
+            }}
+          ></div>
+          <div
+            className="social"
+            style={{
+              backgroundImage: `url(/assets/reddit.png)`,
               backgroundSize: "cover",
             }}
           ></div>

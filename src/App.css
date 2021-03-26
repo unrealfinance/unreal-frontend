@@ -1,12 +1,14 @@
 @import url("https://fonts.googleapis.com/css2?family=Lato:wght@100;300;400;600&display=swap");
 
 :root {
-  --pastel-off-white: #f4f6fc;
-  --pastel-blue: rgb(188, 200, 241);
-  --pastel-yellow: rgb(255, 236, 166);
-  --pastel-red: rgb(252, 172, 171);
-  --pastel-green: rgb(88, 216, 147);
-  --pastel-purple: rgb(152, 129, 238);
+  --off-white: #f4f6fc;
+  --dark-blue-primary: #3f64ff;
+  --dark-blue-secondary: #203a58;
+  --dark-gray: #2e3449;
+  --text-gray: #9194a3;
+  --dark-blue-1: #1e2745;
+  --dark-blue-2: #182039;
+  --dark-blue-3: #151d34;
   --pastel-black: rgb(19, 19, 32);
 }
 
@@ -15,7 +17,7 @@ body {
   font-family: "Lato", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: var(--pastel-off-white) !important;
+  background: var(--dark-blue-2) !important;
 }
 
 .App {
@@ -31,7 +33,7 @@ body {
 }
 
 .App > .sidebar {
-  background: var(--pastel-purple);
+  background: var(--dark-blue-3);
   width: 15rem;
   display: flex;
   flex-direction: column;
@@ -43,7 +45,7 @@ body {
   text-align: center;
   padding: 2rem 0;
   font-size: 1.5rem;
-  color: white;
+  color: var(--off-white);
 }
 
 .App > .sidebar > .links {
@@ -58,14 +60,14 @@ body {
 }
 
 .App > .sidebar > .links > .socials > .social {
-  height: 2rem;
-  width: 2rem;
+  height: 1.3rem;
+  width: 1.3rem;
+  opacity: 0.6;
 }
 
 .App > .sidebar > .links > .link {
   padding: 0.3rem 0;
-  font-weight: 600;
-  color: white;
+  color: var(--text-gray);
 }
 
 .App > .main-content {
@@ -85,10 +87,7 @@ body {
 .App > .main-content > .tokens-tab > .title {
   font-size: 1.2rem;
   font-weight: 600;
-}
-
-.App > .main-content > .tokens-tab > .token {
-  width: 12rem !important;
+  color: var(--text-gray);
 }
 
 .App > .main-content > .navbar {
@@ -116,6 +115,7 @@ body {
 
 .connect-web3 > .account-info {
   font-weight: 300;
+  color: var(--text-gray);
 }
 
 .account-blockie {
@@ -123,11 +123,11 @@ body {
 }
 
 .connect-web3 > .connect-button {
-  background: var(--pastel-black);
+  background: var(--dark-blue-secondary);
   padding: 0.8rem 1.5rem;
   text-transform: uppercase;
   font-weight: 600;
-  color: white;
+  color: var(--off-white);
   font-size: 0.8rem;
   border-radius: 1rem;
   cursor: pointer;
@@ -148,18 +148,17 @@ body {
   justify-content: space-between;
   align-items: center;
   gap: 0.5rem;
+  color: var(--off-white);
 }
 
 .App > .main-content > .navbar > .tabs > .protocol > .icon {
   height: 2rem;
   width: 2rem;
   border-radius: 50%;
-  background: var(--pastel-yellow);
 }
 
 .App > .main-content > .navbar > .tabs > .active {
-  font-weight: 600;
-  background: var(--pastel-blue);
+  background: var(--dark-gray);
 }
 
 .App > .main-content > .futures-container {
@@ -172,7 +171,7 @@ body {
 .App > .main-content > .futures-container > .futures {
   border-radius: 2rem;
   padding: 2rem;
-  background: white;
+  background: var(--dark-blue-1);
   border-radius: 2rem;
   margin-bottom: 2rem;
 }
@@ -185,8 +184,8 @@ body {
 .App > .main-content > .futures-container > .futures > .interactions > .token {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   width: 15rem;
+  gap: 1rem;
 }
 
 .App
@@ -196,10 +195,9 @@ body {
   > .interactions
   > .token
   > .token-image {
-  height: 3.5rem;
-  width: 3.5rem;
+  height: 2.5rem;
+  width: 2.5rem;
   border-radius: 50%;
-  background: var(--pastel-purple);
 }
 
 .App
@@ -209,7 +207,8 @@ body {
   > .interactions
   > .token
   > .token-name {
-  font-size: 1.6rem;
+  font-size: 1.4rem;
+  color: var(--off-white);
 }
 
 .App
@@ -230,16 +229,17 @@ body {
   > .interactions
   > .buttons
   > .button {
-  color: white;
+  color: var(--off-white);
   padding: 0.5rem;
   border-radius: 0.5rem;
   font-size: 0.8rem;
   width: 7rem;
+  height: 1.5rem;
   display: flex;
   align-items: center;
   justify-content: center;
   text-transform: uppercase;
-  font-weight: 400;
+  font-weight: 600;
 }
 
 .App
@@ -249,17 +249,7 @@ body {
   > .interactions
   > .buttons
   > .sub {
-  background: var(--pastel-black);
-}
-
-.App
-  > .main-content
-  > .futures-container
-  > .futures
-  > .interactions
-  > .buttons
-  > .unsub {
-  background: var(--pastel-black);
+  background: var(--dark-blue-primary);
 }
 
 .App > .main-content > .futures-container > .futures > .stats {
@@ -270,12 +260,13 @@ body {
 }
 
 .App > .main-content > .futures-container > .futures > .stats > .stat > .title {
-  font-weight: 600;
   margin-bottom: 0.5rem;
+  color: var(--text-gray);
 }
 .App > .main-content > .futures-container > .futures > .stats > .stat > .value {
   font-size: 1.2rem;
-  font-weight: 300;
+  font-weight: 600;
+  color: var(--off-white);
 }
 
 .right-align {

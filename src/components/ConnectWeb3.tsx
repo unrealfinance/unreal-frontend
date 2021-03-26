@@ -46,6 +46,7 @@ const ConnectWeb3: React.FunctionComponent = () => {
   const web3Modal = new Web3Modal({
     cacheProvider: true,
     providerOptions,
+    theme: "dark",
   });
 
   const resetApp = async () => {
