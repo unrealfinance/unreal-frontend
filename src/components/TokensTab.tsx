@@ -13,9 +13,32 @@ const TokensTab: React.FunctionComponent<TokensTabProps> = () => {
   const { setCurrentToken } = useStoreActions((action) => action);
 
   const options = [
-    { value: "DAI", label: "DAI" },
-    { value: "USDT", label: "USDT" },
-    { value: "USDC", label: "USDC" },
+    {
+      value: "DAI",
+      label: (
+        <div className="select-div">
+          <img alt="token" src="/assets/DAI.png" width="20px" /> <div>DAI</div>
+        </div>
+      ),
+    },
+    {
+      value: "USDC",
+      label: (
+        <div className="select-div">
+          <img alt="token" src="/assets/USDC.png" width="20px" />
+          <div>USDC</div>
+        </div>
+      ),
+    },
+    {
+      value: "USDT",
+      label: (
+        <div className="select-div">
+          <img alt="token" src="/assets/USDT.png" width="20px" />
+          <div>USDT</div>
+        </div>
+      ),
+    },
   ];
 
   return (
@@ -27,6 +50,7 @@ const TokensTab: React.FunctionComponent<TokensTabProps> = () => {
         placeholder="select token"
         defaultValue={options[0]}
         onChange={(e: any) => setCurrentToken(e.value)}
+        isSearchable={false}
       />
     </div>
   );

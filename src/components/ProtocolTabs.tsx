@@ -18,14 +18,26 @@ const ProtocolTabs: React.FunctionComponent<ProtocolTabsProps> = () => {
         className={`protocol ${currentProtocol === "AAVE" && "active"}`}
         onClick={() => setCurrentProtocol("AAVE")}
       >
-        <div className="icon"></div>
+        <div
+          className="icon"
+          style={{
+            backgroundImage: `url(/assets/aave-logo.png)`,
+            backgroundSize: "cover",
+          }}
+        ></div>
         <div className="name">AAVE</div>
       </div>
       <div
         className={`protocol ${currentProtocol === "COMP" && "active"}`}
         onClick={() => setCurrentProtocol("COMP")}
       >
-        <div className="icon"></div>
+        <div
+          className="icon"
+          style={{
+            backgroundImage: `url(/assets/compound-logo.png)`,
+            backgroundSize: "cover",
+          }}
+        ></div>
         <div className="name">Compound</div>
       </div>
     </div>

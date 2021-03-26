@@ -24,6 +24,12 @@ body {
   height: 100vh;
 }
 
+.select-div {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
 .App > .sidebar {
   background: var(--pastel-purple);
   width: 15rem;
@@ -48,13 +54,12 @@ body {
   display: flex;
   padding: 2rem 0 1rem 0;
   gap: 1rem;
+  cursor: pointer;
 }
 
 .App > .sidebar > .links > .socials > .social {
   height: 2rem;
   width: 2rem;
-  border-radius: 50%;
-  background: var(--pastel-yellow);
 }
 
 .App > .sidebar > .links > .link {
