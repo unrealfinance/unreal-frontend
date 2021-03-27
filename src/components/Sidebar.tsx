@@ -33,28 +33,37 @@ const Sidebar: React.FunctionComponent<SidebarProps> = () => {
               backgroundImage: `url(/assets/twitter.png)`,
               backgroundSize: "cover",
             }}
-          ></div>
+            onClick={() => window.open("https://twitter.com/UnrealFinance")}
+          />
+
           <div
             className="social"
             style={{
               backgroundImage: `url(/assets/telegram.png)`,
               backgroundSize: "cover",
             }}
-          ></div>
+            onClick={() => window.open("https://t.me/unrealfinance")}
+          />
+
           <div
             className="social"
             style={{
               backgroundImage: `url(/assets/medium.png)`,
               backgroundSize: "cover",
             }}
-          ></div>
+            onClick={() => window.open("https://unrealfinance.medium.com/")}
+          />
+
           <div
             className="social"
             style={{
               backgroundImage: `url(/assets/reddit.png)`,
               backgroundSize: "cover",
             }}
-          ></div>
+            onClick={() =>
+              window.open("https://www.reddit.com/r/unrealfinance/")
+            }
+          />
         </div>
       </div>
     </div>
