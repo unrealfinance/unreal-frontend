@@ -1,5 +1,6 @@
 import React from "react";
 import { useStoreState } from "../store/globalStore";
+import DepositModal from "./DepositModal";
 import FutureStats from "./FutureStats";
 
 // hooks and services
@@ -26,8 +27,7 @@ const Future: React.FunctionComponent<FutureProps> = () => {
           <div className="token-name">U-a{currentToken}-30-1</div>
         </div>
         <div className="buttons">
-          <div className="button sub">subscribe</div>
-          {/* <div className="button unsub">unsubscribe</div> */}
+          <DepositModal />
         </div>
       </div>
 
