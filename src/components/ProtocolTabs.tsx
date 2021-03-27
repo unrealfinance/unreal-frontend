@@ -28,9 +28,10 @@ const ProtocolTabs: React.FunctionComponent<ProtocolTabsProps> = () => {
         <div className="name">AAVE</div>
       </div>
       <div
-        className={`protocol ${currentProtocol === "COMP" && "active"}`}
+        className={`protocol tooltip ${currentProtocol === "COMP" && "active"}`}
         // onClick={() => setCurrentProtocol("COMP")}
       >
+        <span className="tooltiptext">Coming Soon</span>
         <div
           className="icon"
           style={{
@@ -38,10 +39,7 @@ const ProtocolTabs: React.FunctionComponent<ProtocolTabsProps> = () => {
             backgroundSize: "cover",
           }}
         ></div>
-        <div className="name tooltip">
-          Compound
-          <span className="tooltiptext">Coming Soon</span>
-        </div>
+        <div className="name ">Compound</div>
       </div>
     </div>
   );
