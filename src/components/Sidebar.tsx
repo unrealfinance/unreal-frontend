@@ -14,9 +14,17 @@ const Sidebar: React.FunctionComponent<SidebarProps> = () => {
         <img alt="token" src="/assets/unreal-logo.png" width="150" />
       </div>
       <div className="links">
-        <div className="link">Governance</div>
-        <div className="link">Docs</div>
-        <div className="link">Program</div>
+        <div className="link tooltip">
+          <span className="tooltiptext">Coming Soon</span>Governance
+        </div>
+        <br />
+        <div className="link tooltip">
+          <span className="tooltiptext">Coming Soon</span>Docs
+        </div>
+        <br />
+        <div className="link tooltip">
+          <span className="tooltiptext">Coming Soon</span>Program
+        </div>
 
         <div className="socials">
           <div

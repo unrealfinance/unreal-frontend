@@ -5,11 +5,21 @@ import React from "react";
 // components, styles and UI
 
 // interfaces
-export interface FutureStatsProps {}
+export interface FutureStatsProps {
+  status: string;
+}
 
-const FutureStats: React.FunctionComponent<FutureStatsProps> = () => {
+const FutureStats: React.FunctionComponent<FutureStatsProps> = ({ status }) => {
   return (
     <div className="stats">
+      <div className="stat">
+        <div className="title">status</div>
+        <div className="value status">
+          <div className={`dot ${status === "live" ? "live" : "ended"}`} />
+          {status === "live" ? "live" : "ended"}
+        </div>
+      </div>
+
       <div className="stat">
         <div className="title">aDAI balance</div>
         <div className="value">1100</div>

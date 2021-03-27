@@ -8,9 +8,17 @@ import FutureStats from "./FutureStats";
 // components, styles and UI
 
 // interfaces
-export interface FutureProps {}
+export interface FutureProps {
+  days: number;
+  futureID: number;
+  status: string;
+}
 
-const Future: React.FunctionComponent<FutureProps> = () => {
+const Future: React.FunctionComponent<FutureProps> = ({
+  days,
+  futureID,
+  status,
+}) => {
   const { currentToken } = useStoreState((state) => state);
 
   return (
@@ -24,14 +32,20 @@ const Future: React.FunctionComponent<FutureProps> = () => {
               backgroundSize: "cover",
             }}
           ></div>
-          <div className="token-name">U-a{currentToken}-30-1</div>
+          <div className="token-name">
+            U-a{currentToken}-{days}-1
+          </div>
         </div>
         <div className="buttons">
-          <DepositModal />
+          <DepositModal
+            currentToken={currentToken}
+            days={days}
+            futureId={futureID}
+          />
         </div>
       </div>
 
-      <FutureStats />
+      <FutureStats status={status} />
     </div>
   );
 };

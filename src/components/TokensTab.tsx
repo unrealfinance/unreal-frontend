@@ -2,7 +2,7 @@ import React from "react";
 
 // hooks and services
 import Select from "react-select";
-import { useStoreActions } from "../store/globalStore";
+import { useStoreActions, useStoreState } from "../store/globalStore";
 
 // components, styles and UI
 
@@ -10,7 +10,10 @@ import { useStoreActions } from "../store/globalStore";
 export interface TokensTabProps {}
 
 const TokensTab: React.FunctionComponent<TokensTabProps> = () => {
-  const { setCurrentToken } = useStoreActions((action) => action);
+  const { setCurrentToken, setOnlySubscribed } = useStoreActions(
+    (action) => action
+  );
+  const { onlySubscribed } = useStoreState((state) => state);
 
   const customStyles = {
     control: (base: any, state: any) => ({
@@ -72,7 +75,14 @@ const TokensTab: React.FunctionComponent<TokensTabProps> = () => {
 
   return (
     <div className="tokens-tab">
-      <div className="title">Available futures :</div>
+      <div className="title">
+        <input
+          type="checkbox"
+          checked={onlySubscribed}
+          onChange={(e) => setOnlySubscribed(e.currentTarget.checked)}
+        />{" "}
+        Show only subscribed
+      </div>
       <Select
         options={options}
         placeholder="select token"

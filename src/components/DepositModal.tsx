@@ -5,9 +5,17 @@ import { Modal } from "react-responsive-modal";
 // components, styles and UI
 
 // interfaces
-export interface DepositModalProps {}
+export interface DepositModalProps {
+  currentToken: string;
+  days: number;
+  futureId: number;
+}
 
-const DepositModal: React.FunctionComponent<DepositModalProps> = () => {
+const DepositModal: React.FunctionComponent<DepositModalProps> = ({
+  currentToken,
+  days,
+  futureId,
+}) => {
   const [open, setOpen] = useState(false);
 
   return (
@@ -35,11 +43,13 @@ const DepositModal: React.FunctionComponent<DepositModalProps> = () => {
             <div
               className="token-image"
               style={{
-                backgroundImage: `url(/assets/DAI.png)`,
+                backgroundImage: `url(/assets/${currentToken}.png)`,
                 backgroundSize: "cover",
               }}
             ></div>
-            <div>u-aDAI-30-1</div>
+            <div>
+              u-{currentToken}-{days}-1
+            </div>
           </div>
           <div className="card-container">
             <div className="card">

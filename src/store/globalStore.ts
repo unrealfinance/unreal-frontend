@@ -8,6 +8,7 @@ export interface IGlobalStore {
   shouldUpdate: boolean;
   currentProtocol: "AAVE" | "COMP";
   currentToken: "DAI" | "USDT" | "USDC";
+  onlySubscribed: boolean;
 
   // actions
   setWeb3: Action<IGlobalStore, any>;
@@ -17,6 +18,7 @@ export interface IGlobalStore {
   setShouldUpdate: Action<IGlobalStore, boolean>;
   setCurrentProtocol: Action<IGlobalStore, string>;
   setCurrentToken: Action<IGlobalStore, string>;
+  setOnlySubscribed: Action<IGlobalStore, boolean>;
 }
 
 const globalStore: IGlobalStore = {
@@ -27,6 +29,7 @@ const globalStore: IGlobalStore = {
   shouldUpdate: false,
   currentProtocol: "AAVE",
   currentToken: "DAI",
+  onlySubscribed: false,
 
   // actions
   setWeb3: action((state, payload: any) => {
@@ -55,6 +58,10 @@ const globalStore: IGlobalStore = {
 
   setCurrentToken: action((state, payload: "DAI" | "USDT" | "USDC") => {
     state.currentToken = payload;
+  }),
+
+  setOnlySubscribed: action((state, payload: boolean) => {
+    state.onlySubscribed = payload;
   }),
 };
 
