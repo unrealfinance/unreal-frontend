@@ -21,7 +21,7 @@ const DepositModal: React.FunctionComponent<DepositModalProps> = ({
   futureAddress,
   duration,
 }) => {
-  const { account } = useStoreState((state) => state);
+  const { account, shouldUpdate } = useStoreState((state) => state);
 
   const {
     subscribe,
@@ -42,39 +42,42 @@ const DepositModal: React.FunctionComponent<DepositModalProps> = ({
   const [YTbalance, setYTBalance] = useState("-.-");
   const [underlyingBalance, setUnderlyingBalance] = useState("-.-");
 
+  const fetchData = async () => {
+    setRemaining(await getFutureRemainingTime(futureAddress));
+    let shares = await getShare(futureAddress);
+    setShare(shares.percentage.toString());
+    setShareAmount(ethers.utils.formatEther(shares.amount));
+
+    setOTBalance(
+      ethers.utils.formatEther(await getOTBalance(futureAddress, account))
+    );
+    setYTBalance(
+      ethers.utils.formatEther(await getYTBalance(futureAddress, account))
+    );
+    setUnderlyingBalance(
+      ethers.utils.formatEther(await getUnderlyingBalance(account))
+    );
+  };
+
   useEffect(() => {
-    const fetchData = async () => {
-      setRemaining(await getFutureRemainingTime(futureAddress));
-      let shares = await getShare(futureAddress);
-      setShare(shares.percentage.toString());
-      setShareAmount(ethers.utils.formatEther(shares.amount));
-
-      setOTBalance(
-        ethers.utils.formatEther(await getOTBalance(futureAddress, account))
-      );
-      setYTBalance(
-        ethers.utils.formatEther(await getYTBalance(futureAddress, account))
-      );
-      setUnderlyingBalance(
-        ethers.utils.formatEther(await getUnderlyingBalance(account))
-      );
-    };
-
     fetchData();
     // eslint-disable-next-line
   }, [futureAddress]);
 
+  useEffect(() => {
+    shouldUpdate && fetchData();
+    // eslint-disable-next-line
+  }, [shouldUpdate]);
+
   const handleSubmit = async () => {
-    if (amount) {
-      let underlying = getUnderlyingAddress();
-      await subscribe(
-        underlying,
-        futureId,
-        futureAddress,
-        duration,
-        (amount * 10 ** 18).toString()
-      );
-    }
+    let underlying = getUnderlyingAddress();
+    await subscribe(
+      underlying,
+      futureId,
+      futureAddress,
+      duration,
+      ethers.utils.parseEther(amount.toString())
+    );
   };
 
   return (
@@ -164,7 +167,7 @@ const DepositModal: React.FunctionComponent<DepositModalProps> = ({
             <div className="card">
               <div className="content">
                 <div className="title">Time remaining</div>
-                <div className="value">{remaining} blocks</div>
+                <div className="value">{remaining.toString()} blocks</div>
               </div>
             </div>
           </div>

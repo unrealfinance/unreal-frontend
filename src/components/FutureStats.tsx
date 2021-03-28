@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import useContracts from "../hooks/useContracts";
 import { ethers } from "ethers";
+import { useStoreState } from "../store/globalStore";
 
 // hooks and services
 
@@ -22,27 +23,34 @@ const FutureStats: React.FunctionComponent<FutureStatsProps> = ({
     getShare,
   } = useContracts();
 
+  const { shouldUpdate } = useStoreState((state) => state);
+
   const [expired, setExpired] = useState<boolean>(true);
   const [aTokenBalance, setATokenBalance] = useState<string>("-.-");
   const [yieldTotal, setYield] = useState("-.-");
   const [remaining, setRemaining] = useState(0);
   const [share, setShare] = useState(0);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setExpired(await getFutureExpired(futureAddress));
-      setATokenBalance(
-        ethers.utils.formatEther(await getAtokenBalance(futureAddress))
-      );
-      setYield(ethers.utils.formatEther(await getTotalYield(futureAddress)));
-      setRemaining(await getFutureRemainingTime(futureAddress));
-      let shares = await getShare(futureAddress);
-      setShare(shares.percentage.toString());
-    };
+  const fetchData = async () => {
+    setExpired(await getFutureExpired(futureAddress));
+    setATokenBalance(
+      ethers.utils.formatEther(await getAtokenBalance(futureAddress))
+    );
+    setYield(ethers.utils.formatEther(await getTotalYield(futureAddress)));
+    setRemaining(await getFutureRemainingTime(futureAddress));
+    let shares = await getShare(futureAddress);
+    setShare(shares.percentage.toString());
+  };
 
+  useEffect(() => {
     fetchData();
     // eslint-disable-next-line
   }, [futureAddress]);
+
+  useEffect(() => {
+    shouldUpdate && fetchData();
+    // eslint-disable-next-line
+  }, [shouldUpdate]);
 
   return (
     <div className="stats">
@@ -55,7 +63,7 @@ const FutureStats: React.FunctionComponent<FutureStatsProps> = ({
       </div>
 
       <div className="stat">
-        <div className="title">aDAI balance</div>
+        <div className="title">locked aDAI</div>
         <div className="value">
           {aTokenBalance.split(".")[0]}
           <span className="decimals">
@@ -76,7 +84,7 @@ const FutureStats: React.FunctionComponent<FutureStatsProps> = ({
 
       <div className="stat">
         <div className="title">Time Remaining</div>
-        <div className="value">{remaining} blocks</div>
+        <div className="value">{remaining.toString()} blocks</div>
       </div>
 
       <div className="stat">

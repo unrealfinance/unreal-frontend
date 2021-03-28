@@ -38,19 +38,6 @@
       "type": "event"
     },
     {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": false,
-          "internalType": "address",
-          "name": "futureAddress",
-          "type": "address"
-        }
-      ],
-      "name": "NewFuture",
-      "type": "event"
-    },
-    {
       "inputs": [
         {
           "internalType": "address",

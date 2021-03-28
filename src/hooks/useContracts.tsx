@@ -1,11 +1,13 @@
 import { ethers } from "ethers";
 import controller_contract from "../contracts/controller.json";
-import { useStoreState } from "../store/globalStore";
+import { useStoreActions, useStoreState } from "../store/globalStore";
 
 const useContracts = () => {
   const { web3, account, signer, currentToken } = useStoreState(
     (state) => state
   );
+
+  const { setShouldUpdate } = useStoreActions((action) => action);
 
   const getUnderlyingAddress = () => {
     let underlyings = {
@@ -61,7 +63,11 @@ const useContracts = () => {
       .connect(signer)
       .getFutureExpiry(futureAddress);
 
-    return expiryBlock.sub(currentBlock).toString();
+    if (expiryBlock.sub(currentBlock) > 0) {
+      return expiryBlock.sub(currentBlock);
+    } else {
+      return "0";
+    }
   };
 
   //   const getFutureAddress = async (
@@ -96,7 +102,7 @@ const useContracts = () => {
       return UnderlyingContract.totalSupply();
     };
 
-    const approve = (address: string, amount: string) => {
+    const approve = (address: string, amount: ethers.BigNumber) => {
       return UnderlyingContract.connect(signer).approve(address, amount);
     };
 
@@ -116,7 +122,7 @@ const useContracts = () => {
   const approveUnderlying = async (
     underlying: string,
     futureAddress: string,
-    amount: string
+    amount: ethers.BigNumber
   ) => {
     await underlyingERC20(underlying).approve(futureAddress, amount);
   };
@@ -139,9 +145,20 @@ const useContracts = () => {
     let yields = atokenBalance.sub(YTSupply);
     let YTBalance = await underlyingERC20(tokenAddress).getBalance(account);
 
+    let percentage;
+    let amount;
+
+    if (YTSupply.eq(ethers.BigNumber.from("0"))) {
+      percentage = 0;
+      amount = 0;
+    } else {
+      percentage = YTBalance.div(YTSupply).mul(100);
+      amount = YTBalance.div(YTSupply).mul(yields);
+    }
+
     return {
-      percentage: YTBalance.div(YTSupply).mul(100),
-      amount: YTBalance.div(YTSupply).mul(yields),
+      percentage,
+      amount,
     };
   };
 
@@ -207,12 +224,17 @@ const useContracts = () => {
     futureId: number,
     futureAddress: string,
     duration: number,
-    amount: string
+    amount: ethers.BigNumber
   ) => {
     let controller = getControllerContract();
     await approveUnderlying(underlying, futureAddress, amount);
     let metadata = getMetaData(underlying, duration);
-    await controller.connect(signer).subscribe(metadata, futureId, amount);
+    let tx = await controller
+      .connect(signer)
+      .subscribe(metadata, futureId, amount);
+
+    await tx.wait();
+    setShouldUpdate(true);
     await addTokenToMetamask("YT", futureAddress);
     await addTokenToMetamask("OT", futureAddress);
   };
