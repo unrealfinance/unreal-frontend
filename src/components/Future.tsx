@@ -1,23 +1,23 @@
 import React from "react";
 import { useStoreState } from "../store/globalStore";
-import DepositModal from "./DepositModal";
-import FutureStats from "./FutureStats";
 
 // hooks and services
 
 // components, styles and UI
+import DepositModal from "./DepositModal";
+import FutureStats from "./FutureStats";
 
 // interfaces
 export interface FutureProps {
-  days: number;
+  duration: number;
   futureID: number;
-  status: string;
+  futureAddress: string;
 }
 
 const Future: React.FunctionComponent<FutureProps> = ({
-  days,
+  duration,
   futureID,
-  status,
+  futureAddress,
 }) => {
   const { currentToken } = useStoreState((state) => state);
 
@@ -33,19 +33,20 @@ const Future: React.FunctionComponent<FutureProps> = ({
             }}
           ></div>
           <div className="token-name">
-            U-a{currentToken}-{days}-1
+            U-a{currentToken}-{duration}-{futureID}
           </div>
         </div>
         <div className="buttons">
           <DepositModal
+            futureAddress={futureAddress}
             currentToken={currentToken}
-            days={days}
+            duration={duration}
             futureId={futureID}
           />
         </div>
       </div>
 
-      <FutureStats status={status} />
+      <FutureStats futureAddress={futureAddress} />
     </div>
   );
 };

@@ -1,7 +1,9 @@
 import { Action, action, createTypedHooks } from "easy-peasy";
+import { Signer } from "ethers";
 
 export interface IGlobalStore {
   web3: any;
+  signer: Signer | "";
   account: string;
   network: string;
   connected: boolean;
@@ -12,6 +14,7 @@ export interface IGlobalStore {
 
   // actions
   setWeb3: Action<IGlobalStore, any>;
+  setSigner: Action<IGlobalStore, Signer | string>;
   setAccount: Action<IGlobalStore, string>;
   setNetwork: Action<IGlobalStore, string>;
   setConnected: Action<IGlobalStore, boolean>;
@@ -23,6 +26,7 @@ export interface IGlobalStore {
 
 const globalStore: IGlobalStore = {
   web3: null,
+  signer: "",
   account: "",
   network: "",
   connected: false,
@@ -34,6 +38,10 @@ const globalStore: IGlobalStore = {
   // actions
   setWeb3: action((state, payload: any) => {
     state.web3 = payload;
+  }),
+
+  setSigner: action((state, payload: Signer) => {
+    state.signer = payload;
   }),
 
   setAccount: action((state, payload: string) => {

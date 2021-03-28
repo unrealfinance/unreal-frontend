@@ -1,15 +1,19 @@
 import React, { useEffect } from "react";
 import Web3Modal from "web3modal";
-import Web3 from "web3";
+import { ethers } from "ethers";
 import { useStoreActions, useStoreState } from "../store/globalStore";
 import makeBlockie from "ethereum-blockies-base64";
 import Authereum from "authereum";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 
 const ConnectWeb3: React.FunctionComponent = () => {
-  const { setAccount, setNetwork, setWeb3, setConnected } = useStoreActions(
-    (actions) => actions
-  );
+  const {
+    setAccount,
+    setNetwork,
+    setWeb3,
+    setConnected,
+    setSigner,
+  } = useStoreActions((actions) => actions);
 
   const { web3, connected, account, network } = useStoreState((state) => state);
 
@@ -56,6 +60,7 @@ const ConnectWeb3: React.FunctionComponent = () => {
     await web3Modal.clearCachedProvider();
     setAccount("");
     setWeb3(null);
+    setSigner("");
     setNetwork("");
     setConnected(false);
   };
@@ -67,26 +72,30 @@ const ConnectWeb3: React.FunctionComponent = () => {
     provider.on("close", () => resetApp());
     provider.on("accountsChanged", async (accounts: string[]) => {
       await setAccount(accounts[0]);
+      const signer = await web3.getSigner();
+      await setSigner(signer);
     });
     provider.on("networkChanged", async (x: any) => {
-      const web3: any = new Web3(provider);
-      const network = await web3.eth.net.getNetworkType();
-      await setNetwork(network);
+      const web3: any = new ethers.providers.Web3Provider(provider);
+      const network = await web3.getNetwork();
+      await setNetwork(network.name);
     });
   };
 
   const onConnect = async () => {
     const provider = await web3Modal.connect();
     await subscribeProvider(provider);
-    const web3: any = new Web3(provider);
+    const web3: any = new ethers.providers.Web3Provider(provider);
 
-    const accounts = await web3.eth.getAccounts();
+    const accounts = await web3.listAccounts();
     const address = accounts[0];
-    const network = await web3.eth.net.getNetworkType();
+    const network = await web3.getNetwork();
+    const signer = await web3.getSigner();
 
     await setWeb3(web3);
+    await setSigner(signer);
     await setAccount(address);
-    await setNetwork(network);
+    await setNetwork(network.name);
     await setConnected(true);
   };
 
