@@ -33,6 +33,7 @@ const DepositModal: React.FunctionComponent<DepositModalProps> = ({
     getYTBalance,
     getAllowanceLimit,
     getFutureExpired,
+    getTotalYield,
   } = useContracts();
 
   const [expired, setExpired] = useState<boolean>(true);
@@ -48,8 +49,14 @@ const DepositModal: React.FunctionComponent<DepositModalProps> = ({
   const fetchData = async () => {
     setRemaining(await getFutureRemainingTime(futureAddress));
     let shares = await getShare(futureAddress);
-    setShare(shares.percentage.toString());
-    setShareAmount(ethers.utils.formatEther(shares.amount));
+    setShare(shares.percentage);
+
+    let totalYield = await getTotalYield(futureAddress);
+    let userYield =
+      (parseFloat(totalYield.toString()) * parseFloat(shares.percentage)) /
+      10 ** 20;
+    setShareAmount(userYield.toFixed(6));
+
     setExpired(await getFutureExpired(futureAddress));
 
     setOTBalance(await getOTBalance(futureAddress, account));

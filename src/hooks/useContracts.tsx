@@ -178,13 +178,13 @@ const useContracts = () => {
       percentage = 0;
       amount = 0;
     } else {
-      percentage = YTBalance.div(YTSupply).mul(100);
+      percentage = YTBalance.mul(1000000).div(YTSupply).mul(100);
       amount = YTBalance.div(YTSupply).mul(yields);
     }
 
     return {
-      percentage,
-      amount,
+      percentage: ethers.utils.formatUnits(percentage, 6),
+      amount: ethers.utils.formatUnits(amount, 6),
     };
   };
 

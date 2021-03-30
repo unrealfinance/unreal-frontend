@@ -29,7 +29,7 @@ const FutureStats: React.FunctionComponent<FutureStatsProps> = ({
   const [aTokenBalance, setATokenBalance] = useState<string>("-.-");
   const [yieldTotal, setYield] = useState("-.-");
   const [remaining, setRemaining] = useState(0);
-  const [share, setShare] = useState(0);
+  const [share, setShare] = useState("0");
 
   const fetchData = async () => {
     setExpired(await getFutureExpired(futureAddress));
@@ -40,7 +40,7 @@ const FutureStats: React.FunctionComponent<FutureStatsProps> = ({
     setYield(ethers.utils.formatEther(await getTotalYield(futureAddress)));
     setRemaining(await getFutureRemainingTime(futureAddress));
     let shares = await getShare(futureAddress);
-    setShare(shares.percentage.toString());
+    setShare(shares.percentage);
   };
 
   useEffect(() => {
