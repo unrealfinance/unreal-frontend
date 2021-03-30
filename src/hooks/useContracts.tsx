@@ -125,7 +125,9 @@ const useContracts = () => {
       futureAddress
     );
   };
-  const getAtokenBalance = async (futureAddress: string) => {
+  const getAtokenBalance = async (
+    futureAddress: string
+  ): Promise<ethers.BigNumber> => {
     let controller = getControllerContract();
     let aToken = await controller.getAToken(futureAddress);
     return await underlyingERC20(aToken).getBalance(futureAddress);
@@ -141,22 +143,32 @@ const useContracts = () => {
     setShouldUpdate(true);
   };
 
-  const getYTSupply = async (futureAddress: string) => {
+  const getYTSupply = async (
+    futureAddress: string
+  ): Promise<ethers.BigNumber> => {
     const tokenAddress = await getYT(futureAddress);
     return await underlyingERC20(tokenAddress).getTotalSupply();
   };
 
+  const getOTSupply = async (
+    futureAddress: string
+  ): Promise<ethers.BigNumber> => {
+    const tokenAddress = await getOT(futureAddress);
+    return await underlyingERC20(tokenAddress).getTotalSupply();
+  };
+
   const getTotalYield = async (futureAddress: string) => {
-    let YTSupply = await getYTSupply(futureAddress);
+    let OTSupply = await getOTSupply(futureAddress);
     let atokenBalance = await getAtokenBalance(futureAddress);
-    return atokenBalance - YTSupply;
+    return atokenBalance.sub(OTSupply);
   };
 
   const getShare = async (futureAddress: string) => {
     let YTSupply = await getYTSupply(futureAddress);
-    let atokenBalance = await getAtokenBalance(futureAddress);
+
+    let yields = await getTotalYield(futureAddress);
+
     const tokenAddress = await getYT(futureAddress);
-    let yields = atokenBalance.sub(YTSupply);
     let YTBalance = await underlyingERC20(tokenAddress).getBalance(account);
 
     let percentage;
@@ -200,14 +212,18 @@ const useContracts = () => {
     return await underlyingERC20(getUnderlyingAddress()).getBalance(owner);
   };
 
-  const addTokenToMetamask = async (name: string, futureAddress: string) => {
+  const addTokenToMetamask = async (
+    name: string,
+    symbol: string,
+    futureAddress: string
+  ) => {
     let tokenAddress: string;
     if (name === "OT") {
       tokenAddress = await getOT(futureAddress);
     } else {
       tokenAddress = await getYT(futureAddress);
     }
-    const tokenSymbol = "U" + name;
+    const tokenSymbol = symbol;
     const tokenDecimals = 18;
 
     try {
@@ -224,9 +240,7 @@ const useContracts = () => {
       });
 
       if (wasAdded) {
-        console.log("Thanks for your interest!");
       } else {
-        console.log("Your loss!");
       }
     } catch (error) {
       console.log(error);
@@ -239,6 +253,24 @@ const useContracts = () => {
     amount: ethers.BigNumber
   ) => {
     await approveUnderlying(underlying, futureAddress, amount);
+  };
+
+  const unsubscribeAndWithdraw = async (futureAddress: string) => {
+    let controller = getControllerContract();
+    let tx = await controller.connect(signer).unsubscribe(futureAddress);
+    await tx.wait();
+    Swal.fire(
+      "Withdraw Successful",
+      "you have received back your underlying DAI",
+      "success"
+    );
+  };
+
+  const harvestYield = async (futureAddress: string) => {
+    let controller = getControllerContract();
+    let tx = await controller.connect(signer).collectYield(futureAddress);
+    await tx.wait();
+    Swal.fire("Harvest Successful", "you have received aDAI", "success");
   };
 
   const subscribe = async (
@@ -259,7 +291,8 @@ const useContracts = () => {
     setShouldUpdate(true);
     Swal.fire({
       title: "Subscription Confirmed!",
-      text: "Do you wish to add UT and YT to your metamask wallet?",
+      text:
+        "Do you wish to add Ownership token and Yield Token to your wallet?",
       icon: "success",
       showConfirmButton: true,
       showDenyButton: true,
@@ -267,8 +300,16 @@ const useContracts = () => {
       denyButtonText: `Nope`,
     }).then(async (result) => {
       if (result.isConfirmed) {
-        await addTokenToMetamask("YT", futureAddress);
-        await addTokenToMetamask("OT", futureAddress);
+        await addTokenToMetamask(
+          "YT",
+          `${currentToken}-${futureId}`,
+          futureAddress
+        );
+        await addTokenToMetamask(
+          "OT",
+          `${currentToken}-${futureId}`,
+          futureAddress
+        );
       } else if (result.isDenied) {
       }
     });
@@ -279,6 +320,7 @@ const useContracts = () => {
     getFutureExpired,
     getFuturesList,
     getOTBalance,
+    harvestYield,
     getYTBalance,
     getUnderlyingBalance,
     subscribe,
@@ -288,6 +330,7 @@ const useContracts = () => {
     getShare,
     getAllowanceLimit,
     approveFutureForSpending,
+    unsubscribeAndWithdraw,
   };
 };
 

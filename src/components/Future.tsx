@@ -1,10 +1,10 @@
 import React from "react";
 import { useStoreState } from "../store/globalStore";
+import DepositModal from "./DepositModal";
 
 // hooks and services
 
 // components, styles and UI
-import DepositModal from "./DepositModal";
 import FutureStats from "./FutureStats";
 
 // interfaces
@@ -39,7 +39,6 @@ const Future: React.FunctionComponent<FutureProps> = ({
         <div className="buttons">
           <DepositModal
             futureAddress={futureAddress}
-            currentToken={currentToken}
             duration={duration}
             futureId={futureID}
           />

@@ -4,44 +4,44 @@ import { Modal } from "react-responsive-modal";
 import useContracts from "../hooks/useContracts";
 import { ethers } from "ethers";
 import { useStoreState } from "../store/globalStore";
+import SubscriptionsInput from "./InputsAndButtons/SubscriptionsInput";
+import ClaimsInput from "./InputsAndButtons/ClaimsInput";
 
 // components, styles and UI
 
 // interfaces
 export interface DepositModalProps {
-  currentToken: string;
   futureId: number;
   futureAddress: string;
   duration: number;
 }
 
 const DepositModal: React.FunctionComponent<DepositModalProps> = ({
-  currentToken,
   futureId,
   futureAddress,
   duration,
 }) => {
-  const { account, shouldUpdate } = useStoreState((state) => state);
+  const { account, shouldUpdate, currentToken } = useStoreState(
+    (state) => state
+  );
 
   const {
-    subscribe,
-    getUnderlyingAddress,
     getFutureRemainingTime,
     getShare,
     getUnderlyingBalance,
     getOTBalance,
     getYTBalance,
     getAllowanceLimit,
-    approveFutureForSpending,
+    getFutureExpired,
   } = useContracts();
 
+  const [expired, setExpired] = useState<boolean>(true);
   const [open, setOpen] = useState(false);
-  const [amount, setAmount] = useState<number>(0);
   const [remaining, setRemaining] = useState(0);
   const [share, setShare] = useState("-.-");
   const [shareAmount, setShareAmount] = useState("-.-");
-  const [OTbalance, setOTBalance] = useState("-.-");
-  const [YTbalance, setYTBalance] = useState("-.-");
+  const [OTbalance, setOTBalance] = useState(ethers.BigNumber.from("0"));
+  const [YTbalance, setYTBalance] = useState(ethers.BigNumber.from("0"));
   const [underlyingBalance, setUnderlyingBalance] = useState("-.-");
   const [allowance, setAllowance] = useState(ethers.BigNumber.from("0"));
 
@@ -50,13 +50,10 @@ const DepositModal: React.FunctionComponent<DepositModalProps> = ({
     let shares = await getShare(futureAddress);
     setShare(shares.percentage.toString());
     setShareAmount(ethers.utils.formatEther(shares.amount));
+    setExpired(await getFutureExpired(futureAddress));
 
-    setOTBalance(
-      ethers.utils.formatEther(await getOTBalance(futureAddress, account))
-    );
-    setYTBalance(
-      ethers.utils.formatEther(await getYTBalance(futureAddress, account))
-    );
+    setOTBalance(await getOTBalance(futureAddress, account));
+    setYTBalance(await getYTBalance(futureAddress, account));
     setUnderlyingBalance(
       ethers.utils.formatEther(await getUnderlyingBalance(account))
     );
@@ -74,41 +71,17 @@ const DepositModal: React.FunctionComponent<DepositModalProps> = ({
     // eslint-disable-next-line
   }, [shouldUpdate]);
 
-  const handleApprove = async () => {
-    let underlying = getUnderlyingAddress();
-
-    await approveFutureForSpending(
-      underlying,
-      futureAddress,
-      ethers.utils.parseEther(amount.toString())
-    );
-  };
-
-  const handleSubscribe = async () => {
-    let underlying = getUnderlyingAddress();
-
-    await subscribe(
-      underlying,
-      futureId,
-      futureAddress,
-      duration,
-      ethers.utils.parseEther(amount.toString())
-    );
-  };
-
-  const handleSubmit = async () => {
-    if (allowance.gte(ethers.utils.parseEther(amount.toString()))) {
-      await handleSubscribe();
-    } else {
-      await handleApprove();
-    }
-  };
-
   return (
     <>
-      <div className="button sub" onClick={() => setOpen(true)}>
-        subscribe
-      </div>
+      {expired === false ? (
+        <div className="button sub" onClick={() => setOpen(true)}>
+          subscribe
+        </div>
+      ) : (
+        <div className="button claim" onClick={() => setOpen(true)}>
+          claim
+        </div>
+      )}
 
       <Modal
         classNames={{
@@ -134,7 +107,7 @@ const DepositModal: React.FunctionComponent<DepositModalProps> = ({
               }}
             ></div>
             <div>
-              u-{currentToken}-{duration}-1
+              u-{currentToken}-{duration}-{futureId}
             </div>
           </div>
           <div className="card-container">
@@ -153,9 +126,13 @@ const DepositModal: React.FunctionComponent<DepositModalProps> = ({
               <div className="content">
                 <div className="title">Yield token Balance</div>
                 <div className="value">
-                  {YTbalance.split(".")[0]}
+                  {ethers.utils.formatEther(YTbalance).split(".")[0]}
                   <span className="decimals">
-                    .{YTbalance.split(".")[1].slice(0, 6)}
+                    .
+                    {ethers.utils
+                      .formatEther(YTbalance)
+                      .split(".")[1]
+                      .slice(0, 6)}
                   </span>
                 </div>
               </div>
@@ -164,9 +141,13 @@ const DepositModal: React.FunctionComponent<DepositModalProps> = ({
               <div className="content">
                 <div className="title">Ownership Token Balance</div>
                 <div className="value">
-                  {OTbalance.split(".")[0]}
+                  {ethers.utils.formatEther(OTbalance).split(".")[0]}
                   <span className="decimals">
-                    .{OTbalance.split(".")[1].slice(0, 6)}
+                    .
+                    {ethers.utils
+                      .formatEther(OTbalance)
+                      .split(".")[1]
+                      .slice(0, 6)}
                   </span>
                 </div>
               </div>
@@ -196,25 +177,22 @@ const DepositModal: React.FunctionComponent<DepositModalProps> = ({
             </div>
           </div>
 
-          <div className="input-amount">
-            <input
-              type="number"
-              placeholder="amount"
-              value={amount.toString()}
-              onChange={(e) => {
-                if (e.target.value) {
-                  setAmount(parseFloat(e.target.value));
-                } else {
-                  setAmount(0.0);
-                }
-              }}
+          {expired === false ? (
+            <SubscriptionsInput
+              futureAddress={futureAddress}
+              duration={duration}
+              futureId={futureId}
+              allowance={allowance}
             />
-            <div className="submit-button" onClick={handleSubmit}>
-              {allowance.gte(ethers.utils.parseEther(amount.toString()))
-                ? "subscribe"
-                : "approve"}
-            </div>
-          </div>
+          ) : (
+            <ClaimsInput
+              futureAddress={futureAddress}
+              duration={duration}
+              futureId={futureId}
+              maxOT={OTbalance}
+              maxYT={shareAmount}
+            />
+          )}
         </div>
       </Modal>
     </>

@@ -36,6 +36,7 @@ const FutureStats: React.FunctionComponent<FutureStatsProps> = ({
     setATokenBalance(
       ethers.utils.formatEther(await getAtokenBalance(futureAddress))
     );
+
     setYield(ethers.utils.formatEther(await getTotalYield(futureAddress)));
     setRemaining(await getFutureRemainingTime(futureAddress));
     let shares = await getShare(futureAddress);

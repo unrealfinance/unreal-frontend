@@ -3,10 +3,12 @@
 :root {
   --off-white: #f4f6fc;
   --dark-blue-primary: #3f64ff;
+  --dark-green-primary: #22c55d;
   --dark-blue-secondary: #203a58;
   --dark-gray: #2e3449;
   --text-gray: #9194a3;
   --text-light-blue: #9bafff;
+  --text-light-green: #cdf5db;
   --dark-blue-1: #1e2745;
   --dark-blue-2: #182039;
   --dark-blue-3: #151d34;
@@ -265,6 +267,16 @@ body {
   background: var(--dark-blue-primary);
 }
 
+.App
+  > .main-content
+  > .futures-container
+  > .futures
+  > .interactions
+  > .buttons
+  > .claim {
+  background: var(--dark-green-primary);
+}
+
 .deposit-modal {
   padding: 0 !important;
   margin: 0 !important;
@@ -338,11 +350,29 @@ body {
   font-weight: 300;
   font-size: 1.3rem;
 }
+
 .deposit-modal > .future-details > .input-amount {
   padding-top: 3rem;
   display: flex;
   flex-direction: column;
   gap: 1rem;
+}
+
+.deposit-modal > .future-details > .claim-buttons {
+  display: flex;
+  gap: 1rem;
+}
+
+.deposit-modal > .future-details > .claim-buttons > .claim-amount {
+  width: 100%;
+  padding-top: 3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.text-transform-override {
+  text-transform: none !important;
 }
 
 input {
@@ -358,6 +388,11 @@ input::-webkit-inner-spin-button {
   margin: 0;
 }
 
+.available {
+  color: var(--off-white);
+  font-size: 0.8rem;
+}
+
 /* Firefox */
 input[type="number"] {
   -moz-appearance: textfield;
@@ -370,6 +405,22 @@ input:focus {
 }
 
 .deposit-modal > .future-details > .input-amount > .submit-button {
+  background: var(--pastel-black);
+  color: var(--off-white);
+  font-weight: 600;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  padding: 0.8rem;
+  border-radius: 0.5rem;
+  text-align: center;
+  cursor: pointer;
+}
+
+.deposit-modal
+  > .future-details
+  > .claim-buttons
+  > .claim-amount
+  > .submit-button {
   background: var(--pastel-black);
   color: var(--off-white);
   font-weight: 600;
