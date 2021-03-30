@@ -9,6 +9,7 @@ const FutureContainer: React.FunctionComponent = () => {
 
   const [sevenDayFutures, set7DayFutures] = useState<any>([]);
   const [thirtyDayFutures, set30DayFutures] = useState<any>([]);
+  const [ninetyDayFutures, set90DayFutures] = useState<any>([]);
 
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -17,11 +18,14 @@ const FutureContainer: React.FunctionComponent = () => {
       setLoading(true);
       const underlyingToken = getUnderlyingAddress();
 
-      const sevenDayFutures = await getFuturesList(underlyingToken, 7);
+      const sevenDayFutures = await getFuturesList(underlyingToken, 5760 * 7);
       set7DayFutures(sevenDayFutures);
 
-      const thirtyDayFutures = await getFuturesList(underlyingToken, 30);
+      const thirtyDayFutures = await getFuturesList(underlyingToken, 5760 * 30);
       set30DayFutures(thirtyDayFutures);
+
+      const ninetyDayFutures = await getFuturesList(underlyingToken, 5760 * 90);
+      set90DayFutures(ninetyDayFutures);
 
       setLoading(false);
     };
@@ -50,6 +54,15 @@ const FutureContainer: React.FunctionComponent = () => {
             <Future
               key={index}
               duration={30}
+              futureID={index}
+              futureAddress={future}
+            />
+          ))}
+
+          {ninetyDayFutures.map((future: any, index: number) => (
+            <Future
+              key={index}
+              duration={90}
               futureID={index}
               futureAddress={future}
             />

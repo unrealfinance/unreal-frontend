@@ -85,7 +85,9 @@ const FutureStats: React.FunctionComponent<FutureStatsProps> = ({
 
       <div className="stat">
         <div className="title">Time Remaining</div>
-        <div className="value">{remaining.toString()} blocks</div>
+        <div className="value">
+          {Math.round(remaining / 5760).toString()} days
+        </div>
       </div>
 
       <div className="stat">

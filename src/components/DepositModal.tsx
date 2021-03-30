@@ -172,7 +172,9 @@ const DepositModal: React.FunctionComponent<DepositModalProps> = ({
             <div className="card">
               <div className="content">
                 <div className="title">Time remaining</div>
-                <div className="value">{remaining.toString()} blocks</div>
+                <div className="value">
+                  {Math.round(remaining / 5760).toString()} days
+                </div>
               </div>
             </div>
           </div>

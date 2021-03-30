@@ -13,7 +13,7 @@ const useContracts = () => {
   const getUnderlyingAddress = () => {
     let underlyings = {
       //mainnet
-      DAI: "0x6B175474E89094C44Da98b954EedeAC495271d0F", // DAI
+      DAI: "0xff795577d9ac8bd7d90ee22b6c1703490b6512fd", // DAI
       USDC: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48", // USDC
       USDT: "0xdac17f958d2ee523a2206206994597c13d831ec7", // USDT
     };
@@ -287,6 +287,8 @@ const useContracts = () => {
       .connect(signer)
       .subscribe(metadata, futureId, amount);
 
+    console.log(tx);
+
     await tx.wait();
     setShouldUpdate(true);
     Swal.fire({
@@ -302,12 +304,12 @@ const useContracts = () => {
       if (result.isConfirmed) {
         await addTokenToMetamask(
           "YT",
-          `${currentToken}-${futureId}`,
+          `${currentToken}${duration / 5760}`,
           futureAddress
         );
         await addTokenToMetamask(
           "OT",
-          `${currentToken}-${futureId}`,
+          `${currentToken}${duration / 5760}`,
           futureAddress
         );
       } else if (result.isDenied) {

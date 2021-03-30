@@ -45,7 +45,7 @@ const SubscriptionsInput: React.FunctionComponent<SubscriptionsInputProps> = ({
       underlying,
       futureId,
       futureAddress,
-      duration,
+      duration * 5760,
       ethers.utils.parseEther(amount.toString())
     );
   };
