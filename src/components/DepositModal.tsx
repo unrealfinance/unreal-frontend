@@ -31,6 +31,8 @@ const DepositModal: React.FunctionComponent<DepositModalProps> = ({
     getUnderlyingBalance,
     getOTBalance,
     getYTBalance,
+    getAllowanceLimit,
+    approveFutureForSpending,
   } = useContracts();
 
   const [open, setOpen] = useState(false);
@@ -41,6 +43,7 @@ const DepositModal: React.FunctionComponent<DepositModalProps> = ({
   const [OTbalance, setOTBalance] = useState("-.-");
   const [YTbalance, setYTBalance] = useState("-.-");
   const [underlyingBalance, setUnderlyingBalance] = useState("-.-");
+  const [allowance, setAllowance] = useState(ethers.BigNumber.from("0"));
 
   const fetchData = async () => {
     setRemaining(await getFutureRemainingTime(futureAddress));
@@ -57,6 +60,8 @@ const DepositModal: React.FunctionComponent<DepositModalProps> = ({
     setUnderlyingBalance(
       ethers.utils.formatEther(await getUnderlyingBalance(account))
     );
+
+    setAllowance(await getAllowanceLimit(account, futureAddress));
   };
 
   useEffect(() => {
@@ -69,8 +74,19 @@ const DepositModal: React.FunctionComponent<DepositModalProps> = ({
     // eslint-disable-next-line
   }, [shouldUpdate]);
 
-  const handleSubmit = async () => {
+  const handleApprove = async () => {
     let underlying = getUnderlyingAddress();
+
+    await approveFutureForSpending(
+      underlying,
+      futureAddress,
+      ethers.utils.parseEther(amount.toString())
+    );
+  };
+
+  const handleSubscribe = async () => {
+    let underlying = getUnderlyingAddress();
+
     await subscribe(
       underlying,
       futureId,
@@ -78,6 +94,14 @@ const DepositModal: React.FunctionComponent<DepositModalProps> = ({
       duration,
       ethers.utils.parseEther(amount.toString())
     );
+  };
+
+  const handleSubmit = async () => {
+    if (allowance.gte(ethers.utils.parseEther(amount.toString()))) {
+      await handleSubscribe();
+    } else {
+      await handleApprove();
+    }
   };
 
   return (
@@ -177,10 +201,18 @@ const DepositModal: React.FunctionComponent<DepositModalProps> = ({
               type="number"
               placeholder="amount"
               value={amount.toString()}
-              onChange={(e) => setAmount(parseFloat(e.target.value))}
+              onChange={(e) => {
+                if (e.target.value) {
+                  setAmount(parseFloat(e.target.value));
+                } else {
+                  setAmount(0.0);
+                }
+              }}
             />
             <div className="submit-button" onClick={handleSubmit}>
-              subscribe
+              {allowance.gte(ethers.utils.parseEther(amount.toString()))
+                ? "subscribe"
+                : "approve"}
             </div>
           </div>
         </div>

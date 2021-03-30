@@ -1,6 +1,7 @@
 import { ethers } from "ethers";
 import controller_contract from "../contracts/controller.json";
 import { useStoreActions, useStoreState } from "../store/globalStore";
+import Swal from "sweetalert2";
 
 const useContracts = () => {
   const { web3, account, signer, currentToken } = useStoreState(
@@ -98,6 +99,10 @@ const useContracts = () => {
       return UnderlyingContract.balanceOf(address);
     };
 
+    const getAllowance = (owner: string, spender: string) => {
+      return UnderlyingContract.allowance(owner, spender);
+    };
+
     const getTotalSupply = () => {
       return UnderlyingContract.totalSupply();
     };
@@ -110,9 +115,16 @@ const useContracts = () => {
       getBalance,
       approve,
       getTotalSupply,
+      getAllowance,
     };
   };
 
+  const getAllowanceLimit = async (owner: string, futureAddress: string) => {
+    return await underlyingERC20(getUnderlyingAddress()).getAllowance(
+      owner,
+      futureAddress
+    );
+  };
   const getAtokenBalance = async (futureAddress: string) => {
     let controller = getControllerContract();
     let aToken = await controller.getAToken(futureAddress);
@@ -124,7 +136,9 @@ const useContracts = () => {
     futureAddress: string,
     amount: ethers.BigNumber
   ) => {
-    await underlyingERC20(underlying).approve(futureAddress, amount);
+    let tx = await underlyingERC20(underlying).approve(futureAddress, amount);
+    await tx.wait();
+    setShouldUpdate(true);
   };
 
   const getYTSupply = async (futureAddress: string) => {
@@ -219,6 +233,14 @@ const useContracts = () => {
     }
   };
 
+  const approveFutureForSpending = async (
+    underlying: string,
+    futureAddress: string,
+    amount: ethers.BigNumber
+  ) => {
+    await approveUnderlying(underlying, futureAddress, amount);
+  };
+
   const subscribe = async (
     underlying: string,
     futureId: number,
@@ -227,7 +249,7 @@ const useContracts = () => {
     amount: ethers.BigNumber
   ) => {
     let controller = getControllerContract();
-    await approveUnderlying(underlying, futureAddress, amount);
+    // await approveUnderlying(underlying, futureAddress, amount);
     let metadata = getMetaData(underlying, duration);
     let tx = await controller
       .connect(signer)
@@ -235,8 +257,21 @@ const useContracts = () => {
 
     await tx.wait();
     setShouldUpdate(true);
-    await addTokenToMetamask("YT", futureAddress);
-    await addTokenToMetamask("OT", futureAddress);
+    Swal.fire({
+      title: "Subscription Confirmed!",
+      text: "Do you wish to add UT and YT to your metamask wallet?",
+      icon: "success",
+      showConfirmButton: true,
+      showDenyButton: true,
+      confirmButtonText: `Yes`,
+      denyButtonText: `Nope`,
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        await addTokenToMetamask("YT", futureAddress);
+        await addTokenToMetamask("OT", futureAddress);
+      } else if (result.isDenied) {
+      }
+    });
   };
 
   return {
@@ -251,6 +286,8 @@ const useContracts = () => {
     getTotalYield,
     getFutureRemainingTime,
     getShare,
+    getAllowanceLimit,
+    approveFutureForSpending,
   };
 };
 
