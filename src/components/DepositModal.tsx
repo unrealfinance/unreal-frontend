@@ -114,7 +114,7 @@ const DepositModal: React.FunctionComponent<DepositModalProps> = ({
               }}
             ></div>
             <div>
-              u-{currentToken}-{duration}-{futureId}
+              AAVE-{currentToken}-{duration}-days
             </div>
           </div>
           <div className="card-container">

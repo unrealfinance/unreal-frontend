@@ -33,7 +33,7 @@ const Future: React.FunctionComponent<FutureProps> = ({
             }}
           ></div>
           <div className="token-name">
-            U-a{currentToken}-{duration}-{futureID}
+            AAVE-{currentToken}-{duration}-days
           </div>
         </div>
         <div className="buttons">

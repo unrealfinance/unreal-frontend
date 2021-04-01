@@ -4,7 +4,7 @@ import { useStoreState } from "../store/globalStore";
 import Future from "./Future";
 
 const FutureContainer: React.FunctionComponent = () => {
-  const { currentToken, web3 } = useStoreState((state) => state);
+  const { currentToken, web3, network } = useStoreState((state) => state);
   const { getFuturesList, getUnderlyingAddress } = useContracts();
 
   const [sevenDayFutures, set7DayFutures] = useState<any>([]);
@@ -30,16 +30,18 @@ const FutureContainer: React.FunctionComponent = () => {
       setLoading(false);
     };
 
-    web3 && fetchData();
+    if (network === "kovan") {
+      fetchData();
+    }
 
     // eslint-disable-next-line
-  }, [currentToken, web3]);
+  }, [currentToken, web3, network]);
 
   return (
     <div className="futures-container">
-      {loading ? (
+      {loading && network !== "kovan" ? (
         <div className="coming-soon">loading...</div>
-      ) : (
+      ) : network === "kovan" ? (
         <>
           {sevenDayFutures.map((future: any, index: number) => (
             <Future
@@ -68,6 +70,8 @@ const FutureContainer: React.FunctionComponent = () => {
             />
           ))}
         </>
+      ) : (
+        <div className="coming-soon">change network</div>
       )}
 
       {!loading &&

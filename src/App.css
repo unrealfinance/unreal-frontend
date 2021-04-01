@@ -191,6 +191,7 @@ body {
   align-items: center;
   width: 15rem;
   gap: 1rem;
+  flex-grow: 1;
 }
 
 .token-image {

@@ -2,13 +2,25 @@ import { ethers } from "ethers";
 import controller_contract from "../contracts/controller.json";
 import { useStoreActions, useStoreState } from "../store/globalStore";
 import Swal from "sweetalert2";
+import { useEffect } from "react";
 
 const useContracts = () => {
-  const { web3, account, signer, currentToken } = useStoreState(
+  const { web3, account, signer, currentToken, network } = useStoreState(
     (state) => state
   );
 
   const { setShouldUpdate } = useStoreActions((action) => action);
+
+  useEffect(() => {
+    if (web3 && network && network !== "kovan") {
+      Swal.fire(
+        "Unsupported Network",
+        "Please switch your network to Kovan Testnet",
+        "error"
+      );
+    }
+    // eslint-disable-next-line
+  }, [network]);
 
   const getUnderlyingAddress = () => {
     let underlyings = {

@@ -3,8 +3,8 @@ import Web3Modal from "web3modal";
 import { ethers } from "ethers";
 import { useStoreActions, useStoreState } from "../store/globalStore";
 import makeBlockie from "ethereum-blockies-base64";
-import Authereum from "authereum";
-import WalletConnectProvider from "@walletconnect/web3-provider";
+// import Authereum from "authereum";
+// import WalletConnectProvider from "@walletconnect/web3-provider";
 
 const ConnectWeb3: React.FunctionComponent = () => {
   const {
@@ -25,26 +25,26 @@ const ConnectWeb3: React.FunctionComponent = () => {
       check: "isMetaMask",
       package: null,
     },
-    authereum: {
-      package: Authereum,
-    },
-    walletconnect: {
-      package: WalletConnectProvider,
-      options: {
-        infuraId: "INFURA_ID",
-        network: "rinkeby",
-        qrcodeModalOptions: {
-          mobileLinks: [
-            "rainbow",
-            "metamask",
-            "argent",
-            "trust",
-            "imtoken",
-            "pillar",
-          ],
-        },
-      },
-    },
+    // authereum: {
+    //   package: Authereum,
+    // },
+    // walletconnect: {
+    //   package: WalletConnectProvider,
+    //   options: {
+    //     infuraId: "INFURA_ID",
+    //     network: "rinkeby",
+    //     qrcodeModalOptions: {
+    //       mobileLinks: [
+    //         "rainbow",
+    //         "metamask",
+    //         "argent",
+    //         "trust",
+    //         "imtoken",
+    //         "pillar",
+    //       ],
+    //     },
+    //   },
+    // },
   };
 
   const web3Modal = new Web3Modal({
@@ -76,9 +76,16 @@ const ConnectWeb3: React.FunctionComponent = () => {
       await setSigner(signer);
     });
     provider.on("networkChanged", async (x: any) => {
-      const web3: any = new ethers.providers.Web3Provider(provider);
-      const network = await web3.getNetwork();
-      await setNetwork(network.name);
+      try {
+        const web3: any = new ethers.providers.Web3Provider(provider);
+        const network = await web3.getNetwork();
+        await setNetwork(network.name);
+        if (network.name === "kovan") {
+          window.location.reload();
+        }
+      } catch (error) {
+        window.location.reload();
+      }
     });
   };
 
