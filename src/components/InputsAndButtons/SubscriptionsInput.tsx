@@ -3,6 +3,8 @@ import { ethers } from "ethers";
 
 // hooks and services
 import useContracts from "../../hooks/useContracts";
+import { useStoreState } from "../../store/globalStore";
+import Swal from "sweetalert2";
 
 // components, styles and UI
 
@@ -20,10 +22,13 @@ const SubscriptionsInput: React.FunctionComponent<SubscriptionsInputProps> = ({
   duration,
   allowance,
 }) => {
+  const { account } = useStoreState((state) => state);
+
   const {
     subscribe,
     getUnderlyingAddress,
     approveFutureForSpending,
+    getUnderlyingBalance,
   } = useContracts();
 
   const [amount, setAmount] = useState<number>(0);
@@ -51,10 +56,21 @@ const SubscriptionsInput: React.FunctionComponent<SubscriptionsInputProps> = ({
   };
 
   const handleSubmit = async () => {
-    if (allowance.gte(ethers.utils.parseEther(amount.toString()))) {
-      await handleSubscribe();
+    let underlyingBalance = await getUnderlyingBalance(account);
+    let amountToSub = ethers.utils.parseEther(amount.toString());
+
+    if (underlyingBalance.gte(amountToSub)) {
+      if (allowance.gte(ethers.utils.parseEther(amount.toString()))) {
+        await handleSubscribe();
+      } else {
+        await handleApprove();
+      }
     } else {
-      await handleApprove();
+      Swal.fire(
+        "Insufficient DAI balance",
+        "please add some DAI or switch to an account which has more DAI than the requested amount",
+        "error"
+      );
     }
   };
 

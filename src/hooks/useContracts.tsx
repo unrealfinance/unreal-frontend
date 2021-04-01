@@ -107,7 +107,7 @@ const useContracts = () => {
       web3
     );
 
-    const getBalance = (address: string) => {
+    const getBalance = (address: string): Promise<ethers.BigNumber> => {
       return UnderlyingContract.balanceOf(address);
     };
 
@@ -220,7 +220,9 @@ const useContracts = () => {
     return await underlyingERC20(tokenAddress).getBalance(owner);
   };
 
-  const getUnderlyingBalance = async (owner: string) => {
+  const getUnderlyingBalance = async (
+    owner: string
+  ): Promise<ethers.BigNumber> => {
     return await underlyingERC20(getUnderlyingAddress()).getBalance(owner);
   };
 
