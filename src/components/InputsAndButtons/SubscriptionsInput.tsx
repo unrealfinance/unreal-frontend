@@ -59,18 +59,18 @@ const SubscriptionsInput: React.FunctionComponent<SubscriptionsInputProps> = ({
     let underlyingBalance = await getUnderlyingBalance(account);
     let amountToSub = ethers.utils.parseEther(amount.toString());
 
-    if (underlyingBalance.gte(amountToSub)) {
-      if (allowance.gte(ethers.utils.parseEther(amount.toString()))) {
+    if (allowance.gte(ethers.utils.parseEther(amount.toString()))) {
+      if (underlyingBalance.gte(amountToSub)) {
         await handleSubscribe();
       } else {
-        await handleApprove();
+        Swal.fire(
+          "Insufficient DAI balance",
+          "please add some DAI or switch to an account which has more DAI than the requested amount",
+          "error"
+        );
       }
     } else {
-      Swal.fire(
-        "Insufficient DAI balance",
-        "please add some DAI or switch to an account which has more DAI than the requested amount",
-        "error"
-      );
+      await handleApprove();
     }
   };
 
