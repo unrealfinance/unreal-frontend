@@ -120,7 +120,7 @@ const DepositModal: React.FunctionComponent<DepositModalProps> = ({
           <div className="card-container">
             <div className="card">
               <div className="content">
-                <div className="title">Underlying balance</div>
+                <div className="title">${currentToken} balance</div>
                 <div className="value">
                   {underlyingBalance.split(".")[0]}
                   <span className="decimals">
@@ -131,7 +131,7 @@ const DepositModal: React.FunctionComponent<DepositModalProps> = ({
             </div>
             <div className="card">
               <div className="content">
-                <div className="title">Yield token Balance</div>
+                <div className="title">UYT Balance</div>
                 <div className="value">
                   {ethers.utils.formatEther(YTbalance).split(".")[0]}
                   <span className="decimals">
@@ -146,7 +146,7 @@ const DepositModal: React.FunctionComponent<DepositModalProps> = ({
             </div>
             <div className="card">
               <div className="content">
-                <div className="title">Ownership Token Balance</div>
+                <div className="title">UOT Balance</div>
                 <div className="value">
                   {ethers.utils.formatEther(OTbalance).split(".")[0]}
                   <span className="decimals">
@@ -161,7 +161,7 @@ const DepositModal: React.FunctionComponent<DepositModalProps> = ({
             </div>
             <div className="card">
               <div className="content">
-                <div className="title">Yield Percentage</div>
+                <div className="title">Yield Share</div>
                 <div className="value">{share}%</div>
               </div>
             </div>
@@ -178,7 +178,7 @@ const DepositModal: React.FunctionComponent<DepositModalProps> = ({
             </div>
             <div className="card">
               <div className="content">
-                <div className="title">Time remaining</div>
+                <div className="title">Expiry</div>
                 <div className="value">
                   {Math.round(remaining / 5760).toString()} days
                 </div>
