@@ -14,6 +14,7 @@ export interface SubscriptionsInputProps {
   futureId: number;
   duration: number;
   allowance: ethers.BigNumber;
+  cid: number;
 }
 
 const SubscriptionsInput: React.FunctionComponent<SubscriptionsInputProps> = ({
@@ -21,6 +22,7 @@ const SubscriptionsInput: React.FunctionComponent<SubscriptionsInputProps> = ({
   futureId,
   duration,
   allowance,
+  cid,
 }) => {
   const { account } = useStoreState((state) => state);
 
@@ -51,7 +53,8 @@ const SubscriptionsInput: React.FunctionComponent<SubscriptionsInputProps> = ({
       futureId,
       futureAddress,
       duration * 5760,
-      ethers.utils.parseEther(amount.toString())
+      ethers.utils.parseEther(amount.toString()),
+      cid
     );
   };
 

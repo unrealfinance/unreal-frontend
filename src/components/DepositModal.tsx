@@ -14,12 +14,14 @@ export interface DepositModalProps {
   futureId: number;
   futureAddress: string;
   duration: number;
+  cid: number;
 }
 
 const DepositModal: React.FunctionComponent<DepositModalProps> = ({
   futureId,
   futureAddress,
   duration,
+  cid,
 }) => {
   const { account, shouldUpdate, currentToken } = useStoreState(
     (state) => state
@@ -47,20 +49,20 @@ const DepositModal: React.FunctionComponent<DepositModalProps> = ({
   const [allowance, setAllowance] = useState(ethers.BigNumber.from("0"));
 
   const fetchData = async () => {
-    setRemaining(await getFutureRemainingTime(futureAddress));
-    let shares = await getShare(futureAddress);
+    setRemaining(await getFutureRemainingTime(futureAddress, cid));
+    let shares = await getShare(futureAddress, cid);
     setShare(shares.percentage);
 
-    let totalYield = await getTotalYield(futureAddress);
+    let totalYield = await getTotalYield(futureAddress, cid);
     let userYield =
       (parseFloat(totalYield.toString()) * parseFloat(shares.percentage)) /
       10 ** 20;
     setShareAmount(userYield.toFixed(6));
 
-    setExpired(await getFutureExpired(futureAddress));
+    setExpired(await getFutureExpired(futureAddress, cid));
 
-    setOTBalance(await getOTBalance(futureAddress, account));
-    setYTBalance(await getYTBalance(futureAddress, account));
+    setOTBalance(await getOTBalance(futureAddress, account, cid));
+    setYTBalance(await getYTBalance(futureAddress, account, cid));
     setUnderlyingBalance(
       ethers.utils.formatEther(await getUnderlyingBalance(account))
     );
@@ -192,6 +194,7 @@ const DepositModal: React.FunctionComponent<DepositModalProps> = ({
               duration={duration}
               futureId={futureId}
               allowance={allowance}
+              cid={cid}
             />
           ) : (
             <ClaimsInput
@@ -200,6 +203,7 @@ const DepositModal: React.FunctionComponent<DepositModalProps> = ({
               futureId={futureId}
               maxOT={OTbalance}
               maxYT={shareAmount}
+              cid={cid}
             />
           )}
         </div>

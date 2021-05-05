@@ -12,12 +12,14 @@ export interface FutureProps {
   duration: number;
   futureID: number;
   futureAddress: string;
+  cid: number;
 }
 
 const Future: React.FunctionComponent<FutureProps> = ({
   duration,
   futureID,
   futureAddress,
+  cid,
 }) => {
   const { currentToken } = useStoreState((state) => state);
 
@@ -41,11 +43,12 @@ const Future: React.FunctionComponent<FutureProps> = ({
             futureAddress={futureAddress}
             duration={duration}
             futureId={futureID}
+            cid={cid}
           />
         </div>
       </div>
 
-      <FutureStats futureAddress={futureAddress} />
+      <FutureStats futureAddress={futureAddress} cid={cid} />
     </div>
   );
 };

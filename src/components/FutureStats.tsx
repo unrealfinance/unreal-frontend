@@ -10,10 +10,12 @@ import { useStoreState } from "../store/globalStore";
 // interfaces
 export interface FutureStatsProps {
   futureAddress: string;
+  cid: number;
 }
 
 const FutureStats: React.FunctionComponent<FutureStatsProps> = ({
   futureAddress,
+  cid,
 }) => {
   const {
     getFutureExpired,
@@ -32,14 +34,14 @@ const FutureStats: React.FunctionComponent<FutureStatsProps> = ({
   const [share, setShare] = useState("0");
 
   const fetchData = async () => {
-    setExpired(await getFutureExpired(futureAddress));
+    setExpired(await getFutureExpired(futureAddress, cid));
     setATokenBalance(
-      ethers.utils.formatEther(await getAtokenBalance(futureAddress))
+      ethers.utils.formatEther(await getAtokenBalance(futureAddress, cid))
     );
 
-    setYield(ethers.utils.formatEther(await getTotalYield(futureAddress)));
-    setRemaining(await getFutureRemainingTime(futureAddress));
-    let shares = await getShare(futureAddress);
+    setYield(ethers.utils.formatEther(await getTotalYield(futureAddress, cid)));
+    setRemaining(await getFutureRemainingTime(futureAddress, cid));
+    let shares = await getShare(futureAddress, cid);
     setShare(shares.percentage);
   };
 

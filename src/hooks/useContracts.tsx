@@ -42,25 +42,34 @@ const useContracts = () => {
     return ethers.utils.keccak256(metadataPre);
   };
 
-  const getControllerContract = () => {
-    return new ethers.Contract(
-      controller_contract.address,
-      controller_contract.abi,
-      web3
-    );
+  const getControllerContract = (id: number) => {
+    if (id === 1) {
+      return new ethers.Contract(
+        controller_contract.address,
+        controller_contract.abi,
+        web3
+      );
+    } else {
+      return new ethers.Contract(
+        controller_contract.address2,
+        controller_contract.abi,
+        web3
+      );
+    }
   };
 
   const getFuturesList = async (
     underlyingAddress: string,
-    duration: number
+    duration: number,
+    id: number
   ) => {
-    let controller = getControllerContract();
+    let controller = getControllerContract(id);
     let metadata = getMetaData(underlyingAddress, duration);
     return await controller.getFutureList(metadata);
   };
 
-  const getFutureExpired = async (futureAddress: string) => {
-    let controller = getControllerContract();
+  const getFutureExpired = async (futureAddress: string, id: number) => {
+    let controller = getControllerContract(id);
     let currentBlock = await web3.getBlockNumber();
 
     return (
@@ -69,8 +78,8 @@ const useContracts = () => {
     );
   };
 
-  const getFutureRemainingTime = async (futureAddress: string) => {
-    let controller = getControllerContract();
+  const getFutureRemainingTime = async (futureAddress: string, id: number) => {
+    let controller = getControllerContract(id);
     let currentBlock = await web3.getBlockNumber();
     let expiryBlock = await controller
       .connect(signer)
@@ -138,9 +147,10 @@ const useContracts = () => {
     );
   };
   const getAtokenBalance = async (
-    futureAddress: string
+    futureAddress: string,
+    id: number
   ): Promise<ethers.BigNumber> => {
-    let controller = getControllerContract();
+    let controller = getControllerContract(id);
     let aToken = await controller.getAToken(futureAddress);
     return await underlyingERC20(aToken).getBalance(futureAddress);
   };
@@ -156,31 +166,33 @@ const useContracts = () => {
   };
 
   const getYTSupply = async (
-    futureAddress: string
+    futureAddress: string,
+    id: number
   ): Promise<ethers.BigNumber> => {
-    const tokenAddress = await getYT(futureAddress);
+    const tokenAddress = await getYT(futureAddress, id);
     return await underlyingERC20(tokenAddress).getTotalSupply();
   };
 
   const getOTSupply = async (
-    futureAddress: string
+    futureAddress: string,
+    id: number
   ): Promise<ethers.BigNumber> => {
-    const tokenAddress = await getOT(futureAddress);
+    const tokenAddress = await getOT(futureAddress, id);
     return await underlyingERC20(tokenAddress).getTotalSupply();
   };
 
-  const getTotalYield = async (futureAddress: string) => {
-    let OTSupply = await getOTSupply(futureAddress);
-    let atokenBalance = await getAtokenBalance(futureAddress);
+  const getTotalYield = async (futureAddress: string, id: number) => {
+    let OTSupply = await getOTSupply(futureAddress, id);
+    let atokenBalance = await getAtokenBalance(futureAddress, id);
     return atokenBalance.sub(OTSupply);
   };
 
-  const getShare = async (futureAddress: string) => {
-    let YTSupply = await getYTSupply(futureAddress);
+  const getShare = async (futureAddress: string, id: number) => {
+    let YTSupply = await getYTSupply(futureAddress, id);
 
-    let yields = await getTotalYield(futureAddress);
+    let yields = await getTotalYield(futureAddress, id);
 
-    const tokenAddress = await getYT(futureAddress);
+    const tokenAddress = await getYT(futureAddress, id);
     let YTBalance = await underlyingERC20(tokenAddress).getBalance(account);
 
     let percentage;
@@ -200,23 +212,31 @@ const useContracts = () => {
     };
   };
 
-  const getOT = async (futureAddress: string) => {
-    let controller = getControllerContract();
+  const getOT = async (futureAddress: string, id: number) => {
+    let controller = getControllerContract(id);
     return await controller.connect(signer).getUOSToken(futureAddress);
   };
 
-  const getYT = async (futureAddress: string) => {
-    let controller = getControllerContract();
+  const getYT = async (futureAddress: string, id: number) => {
+    let controller = getControllerContract(id);
     return await controller.connect(signer).getUToken(futureAddress);
   };
 
-  const getOTBalance = async (futureAddress: string, owner: string) => {
-    const tokenAddress = await getOT(futureAddress);
+  const getOTBalance = async (
+    futureAddress: string,
+    owner: string,
+    id: number
+  ) => {
+    const tokenAddress = await getOT(futureAddress, id);
     return await underlyingERC20(tokenAddress).getBalance(owner);
   };
 
-  const getYTBalance = async (futureAddress: string, owner: string) => {
-    const tokenAddress = await getYT(futureAddress);
+  const getYTBalance = async (
+    futureAddress: string,
+    owner: string,
+    id: number
+  ) => {
+    const tokenAddress = await getYT(futureAddress, id);
     return await underlyingERC20(tokenAddress).getBalance(owner);
   };
 
@@ -229,13 +249,14 @@ const useContracts = () => {
   const addTokenToMetamask = async (
     name: string,
     symbol: string,
-    futureAddress: string
+    futureAddress: string,
+    id: number
   ) => {
     let tokenAddress: string;
     if (name === "OT") {
-      tokenAddress = await getOT(futureAddress);
+      tokenAddress = await getOT(futureAddress, id);
     } else {
-      tokenAddress = await getYT(futureAddress);
+      tokenAddress = await getYT(futureAddress, id);
     }
     const tokenSymbol = symbol;
     const tokenDecimals = 18;
@@ -269,8 +290,8 @@ const useContracts = () => {
     await approveUnderlying(underlying, futureAddress, amount);
   };
 
-  const unsubscribeAndWithdraw = async (futureAddress: string) => {
-    let controller = getControllerContract();
+  const unsubscribeAndWithdraw = async (futureAddress: string, id: number) => {
+    let controller = getControllerContract(id);
     let tx = await controller.connect(signer).unsubscribe(futureAddress);
     await tx.wait();
     Swal.fire(
@@ -280,8 +301,8 @@ const useContracts = () => {
     );
   };
 
-  const harvestYield = async (futureAddress: string) => {
-    let controller = getControllerContract();
+  const harvestYield = async (futureAddress: string, id: number) => {
+    let controller = getControllerContract(id);
     let tx = await controller.connect(signer).collectYield(futureAddress);
     await tx.wait();
     Swal.fire("Harvest Successful", "you have received aDAI", "success");
@@ -292,9 +313,10 @@ const useContracts = () => {
     futureId: number,
     futureAddress: string,
     duration: number,
-    amount: ethers.BigNumber
+    amount: ethers.BigNumber,
+    id: number
   ) => {
-    let controller = getControllerContract();
+    let controller = getControllerContract(id);
     // await approveUnderlying(underlying, futureAddress, amount);
     let metadata = getMetaData(underlying, duration);
     let tx = await controller
@@ -319,12 +341,14 @@ const useContracts = () => {
         await addTokenToMetamask(
           "YT",
           `${currentToken}${duration / 5760}`,
-          futureAddress
+          futureAddress,
+          id
         );
         await addTokenToMetamask(
           "OT",
           `${currentToken}${duration / 5760}`,
-          futureAddress
+          futureAddress,
+          id
         );
       } else if (result.isDenied) {
       }

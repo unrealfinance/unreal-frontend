@@ -14,6 +14,7 @@ export interface ClaimsInputProps {
   duration: number;
   maxOT: ethers.BigNumber;
   maxYT: string;
+  cid: number;
 }
 
 const ClaimsInput: React.FunctionComponent<ClaimsInputProps> = ({
@@ -22,6 +23,7 @@ const ClaimsInput: React.FunctionComponent<ClaimsInputProps> = ({
   duration,
   maxOT,
   maxYT,
+  cid,
 }) => {
   const { currentToken } = useStoreState((state) => state);
   const { unsubscribeAndWithdraw, harvestYield } = useContracts();
@@ -30,11 +32,11 @@ const ClaimsInput: React.FunctionComponent<ClaimsInputProps> = ({
   //   const [amountYT, setAmountYT] = useState<number>(0);
 
   const handleClaimOwnership = async () => {
-    unsubscribeAndWithdraw(futureAddress);
+    unsubscribeAndWithdraw(futureAddress, cid);
   };
 
   const handleClaimYield = async () => {
-    harvestYield(futureAddress);
+    harvestYield(futureAddress, cid);
   };
 
   return (
